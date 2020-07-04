@@ -2,10 +2,6 @@
 #
 # Site: https://github.com/AlexeyGogolev/check-bx-db-value
 #
-font_bold=$(tput bold)
-font_normal=$(tput sgr0)
-font_col_err='\033[0;31m' #Color red
-font_col_norm='\033[0m' # Norm Color
 mysql="$(which mysql)"
 php="$(which php)"
 declare -A CLParams
@@ -23,17 +19,17 @@ done
 # if no last CL argument then show description 
 if  [ -z "${CLParams[${CLParams_keys[$param_num-1]}]}" ] ; then
     printf "Script compares result returned by <${CLParams_keys[1]}> to given <${CLParams_keys[2]}>.\nIf the result more than the given value, then exit with code 1, else exit 0.\n"
-    printf "${font_bold}Usage: ${font_normal}\n\t$(basename ${BASH_SOURCE[0]}) " ; for key in "${CLParams_keys[@]}" ; do printf "<$key> "; done ; printf "\n"
-    printf "${font_bold}Example: ${font_normal}\n\t$(basename ${BASH_SOURCE[0]}) \"/www/ab.cd/bitrix/php_interface/dbconn.php\" \"select count(id) from b_event where SUCCESS_EXEC<>'Y'\" 5\n" 
+    printf "Usage: \n\t$(basename ${BASH_SOURCE[0]}) " ; for key in "${CLParams_keys[@]}" ; do printf "<$key> "; done ; printf "\n"
+    printf "Example: \n\t$(basename ${BASH_SOURCE[0]}) \"/www/ab.cd/bitrix/php_interface/dbconn.php\" \"select count(id) from b_event where SUCCESS_EXEC<>'Y'\" 5\n" 
     exit 10
 fi
 # exit if no/empty config
 if ! [ -s "${CLParams[path_to_bxdb_config]}" ] ; then 
-    printf "${font_col_err}File ${CLParams[path_to_bxdb_config]} doesn't exist or empty.${font_col_norm}\n"
+    printf "File ${CLParams[path_to_bxdb_config]} doesn't exist or empty.\n"
     exit 20
 fi
 # exit with error message if query-argument has command from the restriction list (below)
-echo ${CLParams[single_num_value_query]} | grep -i -q -E 'delete|update|insert|drop' && printf "${font_col_err}query \n${CLParams[single_num_value_query]}\nisn't allowed${font_col_norm}\n" && exit 30
+echo ${CLParams[single_num_value_query]} | grep -i -q -E 'delete|update|insert|drop' && printf "query \n${CLParams[single_num_value_query]}\nisn't allowed\n" && exit 30
 # getting values of variables from given php-config -n -- no php.ini , -r -- execute given code
 for key in "${DBSettings_keys[@]}" ; do 
     DBSettings[$key]="$($php -n -r 'include("'${CLParams[path_to_bxdb_config]}'"); print $'$key';')"
