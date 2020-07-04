@@ -9,11 +9,11 @@ Useful to check unsent messages, especially with [monit](https://mmonit.com/moni
 ```console
 $ check_bx_db_value.sh <path_to_bxdb_config> <single_num_value_query> <max_num_value>
 ```
-### Example (content of script somedb_unsent_check.sh ) :
+### Example (content of script somedb_unsent_check.sh ):
 ```bash
 check_bx_db_value.sh "/www/ab.cd/bitrix/php_interface/dbconn.php" "select count(id) from b_event where SUCCESS_EXEC<>'Y'" 5
 ```
-### Example of Monit configuration (for the script above) :
+### Example of Monit configuration (for the script above):
 
 ```bash
 check program somedb_unsent_check with path /somepath/mail_check/somedb_unsent_check.sh
@@ -21,3 +21,5 @@ every 240 cycles
     group mail
 if status != 0 then alert
 ```
+### Monit output:
+![Monit output](https://github.com/AlexeyGogolev/check-bx-db-value/blob/master/monit_output.png?raw=true)
