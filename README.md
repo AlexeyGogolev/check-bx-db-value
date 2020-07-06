@@ -1,25 +1,25 @@
-# Checking value from bitrix database
+# Проверка значения из БД Битрикса
 
-Script compares result returned by <single_num_value_query> to given <max_num_value>.
-If the result more than the given value, then it exits with code 1 (otherwise normal exit).
+Скрипт читает конфиг сайта Битрикса ( <path_to_bxdb_config> ), делает запрос ( <single_num_value_query> ) к его БД, сравнивает результат возвращенный запросом с заданной величиной ( <max_num_value> ).
+Если результат больше заданной величины, выполняется выход с кодом ошибки (иначе нормальное завершение).
 
-Useful to check unsent messages, especially with [monit](https://mmonit.com/monit/) utility.
+Может быть полезен для проверки неотправленных сообщений в БД Битрикс, особено с утилитой [monit](https://mmonit.com/monit/).
 
-### Usage:
+### Использование:
 ```console
 $ check_bx_db_value.sh <path_to_bxdb_config> <single_num_value_query> <max_num_value>
 ```
-### Example (content of script somedb_unsent_check.sh):
+### Пример вызова (содержимое скрипта ab_cd_unsent_check.sh):
 ```bash
 check_bx_db_value.sh "/www/ab.cd/bitrix/php_interface/dbconn.php" "select count(id) from b_event where SUCCESS_EXEC<>'Y'" 2
 ```
-### Example of Monit configuration (for the script above):
+### Пример конфигурации для Monit:
 
 ```bash
-check program somedb_unsent_check with path /somepath/mail_check/somedb_unsent_check.sh
-every 240 cycles
+check program ab_cd_unsent_check with path /home/bitrix/scripts/ab_cd_unsent_check.sh
+every 2 cycles
     group mail
 if status != 0 then alert
 ```
-### Example of Monit output:
+### Пример вывода Monit:
 ![Monit output](https://github.com/AlexeyGogolev/check-bx-db-value/blob/master/monit_output.png?raw=true)
