@@ -1,0 +1,4 @@
+# monit configuration example
+check program ab_cd_unsent_check with path /home/bitrix/scripts/ab_cd_unsent_check.sh every 2 cycles
+    group mail
+if status != 0 then alert
